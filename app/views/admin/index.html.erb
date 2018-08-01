@@ -1,0 +1,163 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+	a:hover{text-decoration: none;background-color: green; color: white;}
+	td:hover a{text-decoration: none;background-color: green; color: white;}
+	td{padding:20px;}
+	tr:hover{cursor:pointer;background-color: green; color: white;}
+	button{background-color:white; color:green;  border-radius: 25px; border:1px solid green; padding:5px 15px;}
+	button:hover{background-color: green; color:white; cursor:pointer;}
+	select{background-color:white; color:green; border:0px; padding:5px 15px;}
+	td a{text-decoration: none; color:grey;font-size:200%;}
+</style>
+<body style="margin:0px;">
+
+<div style="height:100px;font-size:200%;background-color:green ;width:100%;border-bottom: 1px solid black">
+<h1  style="padding-left:50px;padding-top: 40px; color:white">Admin</h1>
+</div>
+
+<div id="main">
+<table style="margin-top: 70px;margin-left: 50px; border: 1px solid green;">
+<tr><td><a href='http://localhost:3000/questions/new'>New Question</a></td></tr>
+<tr><td><a href='http://localhost:3000/questions'>View Questions</a></td></tr>
+<tr><td><a href='http://localhost:3000/users'>View Users</a></td></tr>
+<tr><td><a href='http://localhost:3000/genres/new'>New Genre</a></td></tr>
+<tr><td><a href='http://localhost:3000/genres'>View Genres</a></td></tr>
+<tr><td><a href='http://localhost:3000/subgenres/new'>New Subgenres</a></td></tr>
+<tr><td><a href='http://localhost:3000/subgenres'>View Subgenres</a></td></tr>
+<tr><td><a href='http://localhost:3000/scores'>View Scores</a></td></tr>
+<tr><td><a href='http://localhost:3000/attempts'>View Attempts</a></td></tr>
+<tr><td><a onclick="lead()">View Leaderboard</a></td></tr>
+<tr><td><a href='http://localhost:3000/logout'>Logout</a></td></tr>
+</table>
+</div>
+
+<br /><br /><br />
+
+<div id="quiz-leaderboard" style="display:none;margin-left: 50px;">	
+
+<button onclick="genshow()">BY GENRE</button>
+<button onclick="subgenshow()">BY SUBGENRE</button>
+<button class="quiz-quit" onclick="quitQuiz()" >BACK</button>
+
+
+<div id="by-genre"  style="display:none; width:30%;margin-bottom: 100px;">
+<p style="font-size:120%;border-bottom: 0px solid green;margin-top: 100px; padding-left:10px; padding-bottom: 20px">Select Genre</p>
+<select class="quiz-lead-genre">
+	<% for i in Genre.all %>
+		<option value=<%= i.id %>><%= i.name %></option>
+	<% end %>
+</select>
+<br /><br /><br /><br /><br />
+<button class="quiz-lead-submit" onclick="sortScore()">SUBMIT</button>
+
+
+<table id="lead-genre" style="text-align: center;border:1px solid black; width:100%; margin-bottom:100px;margin-top:100px;font-size: 120%;display:none;">
+	<thead>
+		<tr>
+			<td style="width:300px;">NAME</td>
+			<td style="width:300px;">SCORE</td>
+		</tr>
+	</thead>
+	<tbody id="quiz-lead-genre-table"></tbody>
+</table>
+
+</div>
+
+<div id="by-subgenre"  style="display:none; width:30%;margin-bottom: 100px;">
+<p style="font-size:120%;border-bottom: 0px solid black;margin-top: 100px; padding-left:10px; padding-bottom: 20px">Select Subgenre</p>
+<select class="quiz-lead-subgenre">
+	<% for i in Subgenre.all %>
+		<option  value=<%= i.id %>><%= i.name %></option>
+	<% end %>
+</select>
+<br /><br /><br /><br /><br />
+<button class="quiz-lead-submit" onclick="sortScore()">SUBMIT</button>
+
+<table id="lead-subgenre" style="text-align: center; border:1px solid black; width:100%; margin-bottom:100px;margin-top:100px;font-size: 120%;display:none;">
+	<thead>
+		<tr>
+			<td style="width:300px;">NAME</td>
+			<td style="width:300px;">SCORE</td>
+		</tr>
+	</thead>
+	<tbody id="quiz-lead-subgenre-table"></tbody>
+</table>
+</div>
+
+
+</div>
+
+
+
+<script>
+	function lead()
+	{
+		document.getElementById('main').style.display = 'none';		
+		document.getElementById('quiz-leaderboard').style.display = 'block';		
+	}
+	function genshow()
+	{
+		document.getElementById('by-genre').style.display = 'block';
+		document.getElementById('by-subgenre').style.display = 'none';			
+	}
+
+	function subgenshow()
+	{
+		document.getElementById('by-genre').style.display = 'none';
+		document.getElementById('by-subgenre').style.display = 'block';
+	}
+
+	function sortScore()
+	{
+		if(document.getElementById('by-genre').style.display == 'block'){
+		$.ajax({
+				url: '/scores/genre/' + document.getElementsByClassName('quiz-lead-genre')[0].value,
+				method: 'GET',
+				data: {},
+				success: function(response)
+				{
+					console.log(response);
+					$("#quiz-lead-genre-table tr").remove();
+					d=""
+					for(i in response)
+						if(response[i].scr!=0)
+						d+="<tr><td>"+response[i].name+"</td><td>"+response[i].scr+"</td></tr>"
+					$("#quiz-lead-genre-table").append(d);
+					document.getElementById('lead-genre').style.display = "block";		
+				},
+				error: function(repsonse)
+				{
+					console.log(response);
+				},
+			});	
+		}
+		else if(document.getElementById('by-subgenre').style.display == 'block'){
+		$.ajax({
+				url: '/scores/subgenre/' + document.getElementsByClassName('quiz-lead-subgenre')[0].value,
+				method: 'GET',
+				data: {},
+				success: function(response)
+				{
+					console.log(response);
+					$("#quiz-lead-subgenre-table tr").remove();
+					
+					d=""
+					for(i in response)
+						if(response[i].scr != 0)
+						d+="<tr><td>"+response[i].name+"</td><td>"+response[i].scr+"</td></tr>"
+					$("#quiz-lead-subgenre-table").append(d);
+					document.getElementById('lead-subgenre').style.display = "block";
+				},
+				error: function(repsonse)
+				{
+					console.log(response);
+				},
+			});	
+		}
+	}
+
+	function quitQuiz()
+	{
+		window.location.href = "http://localhost:3000/admin";
+	}
+</script>

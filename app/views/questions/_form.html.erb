@@ -1,0 +1,59 @@
+<%= form_with(model: question, local: true) do |form| %>
+  <% if question.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(question.errors.count, "error") %> prohibited this question from being saved:</h2>
+
+      <ul>
+      <% question.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :question %>
+    <%= form.text_field :question, id: :question_question %>
+  </div>
+
+  <div class="field">
+    <%= form.label :optiona %>
+    <%= form.text_field :optiona, id: :question_optiona %>
+  </div>
+
+  <div class="field">
+    <%= form.label :optionb %>
+    <%= form.text_field :optionb, id: :question_optionb %>
+  </div>
+
+  <div class="field">
+    <%= form.label :optionc %>
+    <%= form.text_field :optionc, id: :question_optionc %>
+  </div>
+
+  <div class="field">
+    <%= form.label :optiond %>
+    <%= form.text_field :optiond, id: :question_optiond %>
+  </div>
+
+  <div class="field">
+    <%= form.label :correctoption %>
+    <%= form.text_field :correctoption, id: :question_correctoption %>
+  </div>
+  
+  <div class="field">
+    <%= form.label :genre %>
+    <%= form.collection_select :genre, Genre.all, :name, :name, :prompt => "Select a genre" %>
+    <!--%= form.text_field :genre, id: :question_genre %-->
+  </div>
+  
+  <div class="field">
+    <%= form.label :subgenre %>
+    <%= form.collection_select :subgenre, Subgenre.all, :name, :name, :prompt => "Select a subgenre" %>
+    <!--%= form.text_field :subgenre, id: :question_subgenre %-->
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

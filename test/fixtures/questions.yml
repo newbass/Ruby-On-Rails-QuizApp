@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  question: MyString
+  optiona: MyString
+  optionb: MyString
+  optionc: MyString
+  optiond: MyString
+  correctoption: MyString
+  subgenre: MyString
+  genre: MyString
+
+two:
+  question: MyString
+  optiona: MyString
+  optionb: MyString
+  optionc: MyString
+  optiond: MyString
+  correctoption: MyString
+  subgenre: MyString
+  genre: MyString

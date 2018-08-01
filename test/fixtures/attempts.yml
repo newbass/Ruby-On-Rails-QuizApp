@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uid: 1
+  qid: 1
+  success: 1
+  state: 1
+
+two:
+  uid: 1
+  qid: 1
+  success: 1
+  state: 1
